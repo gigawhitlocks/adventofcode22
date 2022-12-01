@@ -60,17 +60,18 @@ fn read_elves() -> Result<Vec<Elf>, Box<dyn Error>> {
 }
 
 fn main() {
-    let elves = match read_elves() {
+    let mut elves = match read_elves() {
         Ok(e) => e,
         _ => panic!(),
     };
 
-    let mut max: Elf = new_elf(vec![0]);
-
-    for e in elves {
-        if e.total > max.total {
-            max = e
-        }
+    let v = elves.as_mut_slice();
+    v.sort_by_key(|k| k.total);
+    let l = v.len();
+    let mut total: u32 = 0;
+    for k in (l - 3)..l {
+        total += v[k].total;
+        println!("{}", v[k].to_string());
     }
-    println!("{}", max.to_string());
+    println!("{}", total);
 }
